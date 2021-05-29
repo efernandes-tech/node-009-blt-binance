@@ -25,6 +25,13 @@ setInterval(async () => {
 
     if (sell < 200000) {
         console.log('Time to BUY !!!');
+
+        // console.log(await api.accountInfo());
+
+        const account = await api.accountInfo();
+        const coins = account.balances.filter(b => symbol.indexOf(b.asset) !== -1);
+        console.log('Portfolio position:');
+        console.log(coins);
     }
     else if (buy > 230000) {
         console.log('Time to SELL !!!');
