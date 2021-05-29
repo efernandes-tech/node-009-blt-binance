@@ -48,7 +48,7 @@ setInterval(async () => {
             const price = parseInt(sell * profitability);
             console.log(`Selling for: ${price} (${profitability})`);
 
-            const sellOrder = await newOrder(symbol, 1, price, 'SELL', 'LIMIT');
+            const sellOrder = await api.newOrder(symbol, 1, price, 'SELL', 'LIMIT');
 
             console.log(`orderId: ${sellOrder.orderId}`);
             console.log(`status: ${sellOrder.status}`);
