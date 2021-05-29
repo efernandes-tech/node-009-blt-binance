@@ -33,6 +33,15 @@ async function privateCall(path, data = {}, method = 'GET') {
     }
 }
 
+async function newOrder(symbol, quantity, price, side = 'BUY', type = 'MARKET') {
+    const data = { symbol, side, type, quantity };
+
+    if (price) data.price = price;
+    if (type === 'LIMIT') data.timeInForce = 'GTC';
+
+    return privateCall('/v3/order', data, 'POST');
+}
+
 async function accountInfo() {
     return privateCall('/v3/account');
 }
@@ -65,4 +74,4 @@ async function exchangeInfo() {
     return publicCall('/v3/exchangeInfo');
 }
 
-module.exports = { time, depth, exchangeInfo, accountInfo }
+module.exports = { time, depth, exchangeInfo, accountInfo, newOrder }

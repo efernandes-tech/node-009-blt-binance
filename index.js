@@ -1,5 +1,6 @@
 const api = require('./api');
 const symbol = process.env.SYMBOL;
+const profitability = parseFloat(process.env.PROFITABILITY);
 
 setInterval(async () => {
 
@@ -32,6 +33,26 @@ setInterval(async () => {
         const coins = account.balances.filter(b => symbol.indexOf(b.asset) !== -1);
         console.log('Portfolio position:');
         console.log(coins);
+
+        console.log('Checking for Money!');
+        if (sell <= parseInt(coins.find(c => c.asset === 'BUSD').free)) {
+            console.log('Have money!');
+
+            const buyOrder = await api.newOrder(symbol, 1);
+
+            console.log(`orderId: ${buyOrder.orderId}`);
+            console.log(`status: ${buyOrder.status}`);
+
+            console.log('Positioning future sale!');
+
+            const price = parseInt(sell * profitability);
+            console.log(`Selling for: ${price} (${profitability})`);
+
+            const sellOrder = await newOrder(symbol, 1, price, 'SELL', 'LIMIT');
+
+            console.log(`orderId: ${sellOrder.orderId}`);
+            console.log(`status: ${sellOrder.status}`);
+        }
     }
     else if (buy > 230000) {
         console.log('Time to SELL !!!');
