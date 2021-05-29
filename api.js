@@ -24,4 +24,8 @@ async function depth(symbol = 'BTCBRL', limit = 5) {
     return publicCall('/v3/depth', {symbol, limit});
 }
 
-module.exports = { time, depth }
+async function exchangeInfo() {
+    return publicCall('/v3/exchangeInfo');
+}
+
+module.exports = { time, depth, exchangeInfo }

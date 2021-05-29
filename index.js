@@ -1,17 +1,27 @@
 const api = require('./api');
+const symbol = process.env.SYMBOL;
 
 setInterval(async () => {
 
+    // console.log(await api.exchangeInfo());
+
     // console.log(await api.time());
-    // console.log(await api.depth());
+    // console.log(await api.depth(symbol));
 
-    const result = await api.depth();
+    let buy = 0, sell = 0;
 
-    console.log(`Highest Buy: ${result.bids[0][0]}`);
-    console.log(`Lowest Sell: ${result.asks[0][0]}`);
+    const result = await api.depth(symbol);
 
-    const buy = parseInt(result.bids[0][0]);
-    const sell = parseInt(result.asks[0][0]);
+    if (result.bids && result.bids.length) {
+        buy = parseInt(result.bids[0][0]);
+
+        console.log(`Highest Buy: ${result.bids[0][0]}`);
+    }
+    if (result.asks && result.asks.length) {
+        sell = parseInt(result.asks[0][0]);
+
+        console.log(`Lowest Sell: ${result.asks[0][0]}`);
+    }
 
     if (sell < 200000) {
         console.log('Time to BUY !!!');
