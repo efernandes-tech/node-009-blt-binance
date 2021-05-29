@@ -20,4 +20,8 @@ async function time() {
     return publicCall('/v3/time');
 }
 
-module.exports = { time }
+async function depth(symbol = 'BTCBRL', limit = 5) {
+    return publicCall('/v3/depth', {symbol, limit});
+}
+
+module.exports = { time, depth }
