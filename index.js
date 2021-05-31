@@ -39,10 +39,13 @@ setInterval(async () => {
 
         console.log('Checking for Money!');
         const walletCoin = parseFloat(coins.find(c => c.asset === coin).free);
+        const qty = parseFloat((walletCoin / sell) - 0.00001).toFixed(5);
+        console.log(`qty: ${qty}`)
+
         if (sell <= walletCoin) {
             console.log('Have money!');
 
-            const buyOrder = await api.newOrder(symbol, 1);
+            const buyOrder = await api.newOrder(symbol, qty);
 
             console.log(`orderId: ${buyOrder.orderId}`);
             console.log(`status: ${buyOrder.status}`);
