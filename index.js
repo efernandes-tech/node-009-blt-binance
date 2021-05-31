@@ -1,6 +1,9 @@
 const api = require('./api');
 const symbol = process.env.SYMBOL;
 const profitability = parseFloat(process.env.PROFITABILITY);
+const coin = process.env.COIN;
+const goodBuy = process.env.GOOD_BUY;
+const goodSell = process.env.GOOD_SELL;
 
 setInterval(async () => {
 
@@ -14,17 +17,17 @@ setInterval(async () => {
     const result = await api.depth(symbol);
 
     if (result.bids && result.bids.length) {
-        buy = parseInt(result.bids[0][0]);
+        buy = parseFloat(result.bids[0][0]);
 
         console.log(`Highest Buy: ${result.bids[0][0]}`);
     }
     if (result.asks && result.asks.length) {
-        sell = parseInt(result.asks[0][0]);
+        sell = parseFloat(result.asks[0][0]);
 
         console.log(`Lowest Sell: ${result.asks[0][0]}`);
     }
 
-    if (sell < 200000) {
+    if (sell && sell < goodBuy) {
         console.log('Time to BUY !!!');
 
         // console.log(await api.accountInfo());
@@ -35,7 +38,8 @@ setInterval(async () => {
         console.log(coins);
 
         console.log('Checking for Money!');
-        if (sell <= parseInt(coins.find(c => c.asset === 'BUSD').free)) {
+        const walletCoin = parseFloat(coins.find(c => c.asset === coin).free);
+        if (sell <= walletCoin) {
             console.log('Have money!');
 
             const buyOrder = await api.newOrder(symbol, 1);
@@ -43,18 +47,20 @@ setInterval(async () => {
             console.log(`orderId: ${buyOrder.orderId}`);
             console.log(`status: ${buyOrder.status}`);
 
-            console.log('Positioning future sale!');
+            if (buyOrder.status === 'FILLED') {
+                console.log('Positioning future sale!');
 
-            const price = parseInt(sell * profitability);
-            console.log(`Selling for: ${price} (${profitability})`);
+                const price = parseFloat(sell * profitability).toFixed(5);
+                console.log(`Selling for: ${price} (${profitability})`);
 
-            const sellOrder = await api.newOrder(symbol, 1, price, 'SELL', 'LIMIT');
+                const sellOrder = await api.newOrder(symbol, 1, price, 'SELL', 'LIMIT');
 
-            console.log(`orderId: ${sellOrder.orderId}`);
-            console.log(`status: ${sellOrder.status}`);
+                console.log(`orderId: ${sellOrder.orderId}`);
+                console.log(`status: ${sellOrder.status}`);
+            }
         }
     }
-    else if (buy > 230000) {
+    else if (buy && buy > goodSell) {
         console.log('Time to SELL !!!');
     }
     else {

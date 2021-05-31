@@ -16,6 +16,7 @@ async function privateCall(path, data = {}, method = 'GET') {
     const newData = { ...data, timestamp ,signature };
 
     const qs = `?${queryString.stringify(newData)}`;
+    // console.log(qs);
 
     try {
         const result = await axios({
@@ -49,6 +50,7 @@ async function accountInfo() {
 async function publicCall(path, data, method = 'GET') {
     try {
         const qs = data ? `?${queryString.stringify(data)}` : '';
+        // console.log(qs);
 
         const result = await axios({
             method,
