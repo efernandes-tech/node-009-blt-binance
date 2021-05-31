@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config app",
+    "start": "npx nodemon -r dotenv/config app",
     "bot": "node -r dotenv/config index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
